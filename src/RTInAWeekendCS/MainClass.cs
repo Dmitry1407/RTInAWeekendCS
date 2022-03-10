@@ -62,8 +62,6 @@ namespace RTInAWeekendCS
         {
             BColor bwhite = new BColor(160, 160, 160);
             BColor bblack = new BColor(60, 60, 60);
-            ////DrawLine(13, 20, 80, 40, bwhite);
-            ////DrawLine(20, 13, 40, 80, bwhite);
 
             foreach (Hitable obj in scene.GetList())
             {
@@ -172,11 +170,6 @@ namespace RTInAWeekendCS
 
         private static void DrawLine(int width, int height, Vector3F p0, Vector3F p1, BColor bcolor)
         {
-            //int x0 = (int)((p0.X + 1F) * width / 6F); x0 = Math.Max(x0, 0); x0 = Math.Min(x0, width - 1);
-            //int y0 = (int)((p0.Y + 3F) * height / 4F); y0 = Math.Max(y0, 0); y0 = Math.Min(y0, height - 1);
-            //int x1 = (int)((p1.X + 1F) * width / 6F); x1 = Math.Max(x1, 0); x1 = Math.Min(x1, width - 1);
-            //int y1 = (int)((p1.Y + 3F) * height / 4F); y1 = Math.Max(y1, 0); y1 = Math.Min(y1, height - 1);
-
             int x0 = (int)((p0.X + 1F) * width / 2F); x0 = Math.Max(x0, 0); x0 = Math.Min(x0, width - 1);
             int y0 = (int)((p0.Y + 1F) * height / 2F); y0 = Math.Max(y0, 0); y0 = Math.Min(y0, height - 1);
             int x1 = (int)((p1.X + 1F) * width / 2F); x1 = Math.Max(x1, 0); x1 = Math.Min(x1, width - 1);
@@ -213,50 +206,48 @@ namespace RTInAWeekendCS
         private static Hitable RandomScene()
         {
             Int32 i = 0;
-            Int32 n = 90;
+            Int32 n = 256;
             Hitable[] list = new Hitable[n + 1];
 
             // Ground
             list[i++] = new Sphere(new Vector3F(0F, -1000F, 0F), 1000F, new Lambertian(new TDiffuse(new FColor(0.5F, 0.5F, 0.5F))));
-            ////Texture checker = new TChecker(new TDiffuse(new Color(0.2F, 0.3F, 0.1F)), new TDiffuse(new Color(0.9F, 0.9F, 0.9F)));
-            ////list[i++] = new Sphere(new Vector(0F, -1000F, 0F), 1000F, new Lambertian(checker));
 
             // Random spheres
-            //Vector center;
-            //Vector correct = new Vector(4F, 0.2F, 0F);
-            //Vector result = new Vector(0F, 0F, 0F);
-            //for (Int32 a = -4; a < 4; a++)
-            //{
-            //    for (Int32 b = -4; b < 4; b++)
-            //    {
-            //        Single chooseMat = (Single)random.NextDouble();
-            //        center = new Vector(2 * a + 1.9F * (Single)random.NextDouble(), 0.2F, 2 * b + 1.9F * (Single)random.NextDouble());
-            //        Vector.Sub(result, center, correct);
-            //        ////if ((center - new Vector(4F, 0.2F, 0F)).length() > 0.9F)
-            //        if (result.Length() > 0.9F)
-            //        {
-            //            if (chooseMat < 0.6)
-            //            {   // diffuse
-            //                list[i++] = new Sphere(center, 0.2F, new Lambertian(new Color((Single)random.NextDouble(), (Single)random.NextDouble(), (Single)random.NextDouble())));
-            //            }
-            //            else if (chooseMat < 0.9)
-            //            {   // metal
-            //                center.Y = 0.3F;
-            //                list[i++] = new Sphere(center, 0.3F, new Metal(new Color((Single)random.NextDouble(), (Single)random.NextDouble(), (Single)random.NextDouble()), (Single)random.NextDouble()));
-            //            }
-            //            else
-            //            {   // glass
-            //                center.Y = 0.4F;
-            //                list[i++] = new Sphere(center, 0.4F, new Glass(1.5F));
-            //            }
-            //        }
-            //    }
-            //}
+            Vector3F center;
+            Vector3F correct = new Vector3F(4F, 0.2F, 0F);
+            Vector3F result = new Vector3F(0F, 0F, 0F);
+
+            for (Int32 a = -6; a < 6; a++)
+            {
+                for (Int32 b = -6; b < 6; b++)
+                {
+                    Single chooseMat = (Single)random.NextDouble();
+                    center = new Vector3F(2 * a + 1.9F * (Single)random.NextDouble(), 0.2F, 2 * b + 1.9F * (Single)random.NextDouble());
+                    Vector3F.Sub(result, center, correct);
+                    if (result.Length() > 0.9F)
+                    {
+                        if (chooseMat < 0.6)
+                        {   // diffuse
+                            list[i++] = new Sphere(center, 0.2F, new Lambertian(new TDiffuse(new FColor((Single)random.NextDouble(), (Single)random.NextDouble(), (Single)random.NextDouble()))));
+                        }
+                        else if (chooseMat < 0.9)
+                        {   // metal
+                            center.Y = 0.3F;
+                            list[i++] = new Sphere(center, 0.3F, new Metal(new FColor((Single)random.NextDouble(), (Single)random.NextDouble(), (Single)random.NextDouble()), (Single)random.NextDouble()));
+                        }
+                        else
+                        {   // glass
+                            center.Y = 0.4F;
+                            list[i++] = new Sphere(center, 0.4F, new Glass(1.5F));
+                        }
+                    }
+                }
+            }
 
             // Central spheres
-            list[i++] = new Sphere(new Vector3F(-4F, 1F, 0F), 1F, new Lambertian(new TDiffuse(new FColor(0.4F, 0.2F, 0.1F))));
+            //list[i++] = new Sphere(new Vector3F(-4F, 1F, 0F), 1F, new Lambertian(new TDiffuse(new FColor(0.4F, 0.2F, 0.1F))));
             list[i++] = new Sphere(new Vector3F(0F, 1F, 0F), 1F, new Glass(1.5F));
-            list[i++] = new Sphere(new Vector3F(4F, 1F, 0F), 1F, new Metal(new FColor(0.7F, 0.6F, 0.5F), 0F));
+            //list[i++] = new Sphere(new Vector3F(4F, 1F, 0F), 1F, new Metal(new FColor(0.7F, 0.6F, 0.5F), 0F));
 
             return new HitList(list, i);
         }
@@ -273,22 +264,16 @@ namespace RTInAWeekendCS
         private static Hitable Cylinder()
         {
             Hitable[] list = new Hitable[2];
-            ////Texture checker = new TChecker(new TDiffuse(new Color(0.2F, 0.3F, 0.1F)), new TDiffuse(new Color(0.9F, 0.9F, 0.9F)));
             list[0] = new Sphere(new Vector3F(0F, -1000F, 0F), 1000F, new Lambertian(new TDiffuse(new FColor(0.5F, 0.5F, 0.5F))));
             list[1] = new Cylinder(0F, 1F, 1F, new Lambertian(new TDiffuse(new FColor(0.4F, 0.2F, 0.1F))));
-            ////list[1] = new Cylinder(0F, 1F, 1F, new Glass(1.5F));
-            ////list[1] = new Cylinder(0F, 1F, 1F, new Metal(new Color(0.7F, 0.6F, 0.5F), 0F));
             return new HitList(list, 2);
         }
 
         private static Hitable Torus()
         {
             Hitable[] list = new Hitable[2];
-            ////Texture checker = new TChecker(new TDiffuse(new Color(0.2F, 0.3F, 0.1F)), new TDiffuse(new Color(0.9F, 0.9F, 0.9F)));
             list[0] = new Sphere(new Vector3F(0F, -1000F, 0F), 1000F, new Lambertian(new TDiffuse(new FColor(0.5F, 0.5F, 0.5F))));
             list[1] = new Torus(new Vector3F(0F, 1F, 0F), 2F, 0.4F, new Lambertian(new TDiffuse(new FColor(0.4F, 0.2F, 0.1F))));
-            ////list[1] = new Torus(new Vector(0F, 1F, 0F), 2F, 0.3F, new Glass(1.5F));
-            ////list[1] = new Torus(new Vector(0F, 1F, 0F), 2F, 0.3F, new Metal(new Color(0.7F, 0.6F, 0.5F), 0F));
             return new HitList(list, 2);
         }
 
@@ -296,11 +281,7 @@ namespace RTInAWeekendCS
         {
             Hitable[] list = new Hitable[2];
             list[0] = new Sphere(new Vector3F(0F, -1005F, 0F), 1000F, new Lambertian(new TDiffuse(new FColor(0.5F, 0.5F, 0.5F))));
-            ////list[1] = Utils.ReadObjFile("duck.obj", new Lambertian(new TDiffuse(new FColor(0.4F, 0.2F, 0.1F))));
-            ////list[1] = Utils.ReadObjFile("MyDiamond.obj", new Lambertian(new TDiffuse(new FColor(1F, 1F, 1F))));
             list[1] = Utils.ReadObjFile("african_head.obj", new Lambertian(new TDiffuse(new FColor(1F, 1F, 1F))));
-            ////list[1] = Utils.ReadObjFile("MyDiamond.obj", new Glass(1.5F));
-            ////list[1] = Utils.ReadObjFile("MyDiamond.obj", new Metal(new FColor(0.7F, 0.6F, 0.5F), 0F));
             return new HitList(list, 2);
         }
 
@@ -309,7 +290,6 @@ namespace RTInAWeekendCS
             Hitable[] list = new Hitable[3];
             Texture checker = new TChecker(new TDiffuse(new FColor(0.2F, 0.3F, 0.1F)), new TDiffuse(new FColor(0.9F, 0.9F, 0.9F)));
             list[0] = new Sphere(new Vector3F(0F, -1000F, 0F), 1000F, new Lambertian(checker));
-            ////list[1] = new Sphere(new Vector(0F, 0.5F, 0F), 0.5F, new Lambertian(new TDiffuse(new Color(0.4F, 0.2F, 0.1F))));
             list[1] = new Sphere(new Vector3F(0F, 0.5F, 0F), 0.5F, new Glass(1.5F));
             list[2] = new Sphere(new Vector3F(-1F, 2F, -1F), 0.5F, new Light(new TDiffuse(new FColor(4F, 4F, 4F))));
             return new HitList(list, 3);
@@ -337,8 +317,6 @@ namespace RTInAWeekendCS
             plane3.FlipNormales = true;
             list[i++] = plane3;
 
-            ////list[i++] = new Box(new Vector(130, 0, 65), new Vector(295, 165, 230), white);
-            ////list[i++] = new Box(new Vector(265, 0, 295), new Vector(430, 330, 460), white);
             list[i++] = new Box(130, 295, 0, 165, 65, 230, white);
             list[i++] = new Box(265, 430, 0, 330, 295, 460, white);
 
@@ -357,52 +335,14 @@ namespace RTInAWeekendCS
             Int32 numX = 640;
             Int32 numY = 480;
             Int32 numSamples = 8;
-            ////Byte[] imgBuff;
-            ////Int32 buffCounter = 0;
-
-            ////// MultiThread
-            ////Int32 th_cnt = Environment.ProcessorCount;// Запуск потоков
-            ////var threads = new Thread[th_cnt];
-            ////for (Int32 i = 0; i < threads.Length; i++)
-            ////{
-            ////    threads[i] = new Thread(new ThreadStart(new Calc().CalcPart));
-            ////    threads[i].Start();
-            ////}
-            ////// Ожидание завершения
-            ////for (Int32 i = 0; i < threads.Length; i++)
-            ////{
-            ////    threads[i].Join();
-            ////}
 
             // Create scene
-            ////Hitable scene = RandomScene();
-            ////Hitable scene = Cylinder();
-            ////Hitable scene = Torus();
-            Hitable scene = Duck();
-            ////Hitable scene = TwoSpheres();
-            ////Hitable scene = SimpleLight();
-            ////Hitable scene = CornellBox();
+            Hitable scene = RandomScene();
 
-            ////Create camera for RandomScene
-            //Vector lookfrom = new Vector(13F, 2F, 3F);
-            //Vector lookat = new Vector(0F, 0F, 0F);
-            //Single distToFocus = 10F;
-            //Single aperture = 0.1F;
-            //Single vfov = 20F;
-
-            // Create camera for CornellBox
-            //Vector lookfrom = new Vector(278F, 278F, -800F);
-            //Vector lookat = new Vector(278F, 278F, 0F);
-            //Single distToFocus = 10F;
-            //Single aperture = 0.01F;
-            //Single vfov = 40F;
-
-            // Create camera for Duck
-            ////Vector lookfrom = new Vector(0F, 12F, -20F);
-            ////Vector lookat = new Vector(6F, -6F, -6F);
-            Vector3F lookfrom = new Vector3F(0F, 0.4F, 6F);
+            //Create camera for RandomScene
+            Vector3F lookfrom = new Vector3F(13F, 2F, 3F);
             Vector3F lookat = new Vector3F(0F, 0F, 0F);
-            Single distToFocus = 6.1F;
+            Single distToFocus = 10F;
             Single aperture = 0.1F;
             Single vfov = 20F;
 
@@ -414,7 +354,6 @@ namespace RTInAWeekendCS
                 numY = Int32.Parse(args[1]);
                 numSamples = Int32.Parse(args[2]);
             }
-            ////imgBuff = new Byte[numX * numY * 3];
             imgBuff = new ImgBuff(numX, numY);
 
             // Save to file in current directory
@@ -434,49 +373,46 @@ namespace RTInAWeekendCS
                 Int32 yRound = numY / 20;
                 Console.WriteLine("");
 
-                //for (Int32 y = numY - 1; y >= 0; y--)
-                //{
-                //    for (Int32 x = 0; x < numX; x++)
-                //    {
-                //        r = 0F; g = 0F; b = 0F;
-                //        if (numSamples == 0)
-                //        {
-                //            // No AntiAliasing
-                //            Single u = (Single)x / (Single)numX;
-                //            Single v = (Single)y / (Single)numY;
-                //            Ray ray = camera.GetSingleRay(u, v);
-                //            color = Trace(ray, scene, 0);
-                //            r = (Single)Math.Sqrt(color.R);
-                //            g = (Single)Math.Sqrt(color.G);
-                //            b = (Single)Math.Sqrt(color.B);
-                //        }
-                //        else
-                //        {
-                //            // AntiAliasing ON
-                //            for (Int32 sample = 0; sample < numSamples; sample++)
-                //            {
-                //                Single u = (x + (Single)random.NextDouble()) / (Single)numX;
-                //                Single v = (y + (Single)random.NextDouble()) / (Single)numY;
-                //                Ray ray = camera.GetAARay(u, v);
-                //                color = Trace(ray, scene, 0);
-                //                r += color.R; g += color.G; b += color.B;
-                //            }
-                //            r = (Single)Math.Sqrt(r / (Single)numSamples);
-                //            g = (Single)Math.Sqrt(g / (Single)numSamples);
-                //            b = (Single)Math.Sqrt(b / (Single)numSamples);
-                //        }
-                //        ////imgBuff[buffCounter++] = r > 1F ? Byte.MaxValue : (Byte)(r * 255.99F);
-                //        ////imgBuff[buffCounter++] = g > 1F ? Byte.MaxValue : (Byte)(g * 255.99F);
-                //        ////imgBuff[buffCounter++] = b > 1F ? Byte.MaxValue : (Byte)(b * 255.99F);
-                //        imgBuff.SetPX(x, y, r, g, b);
-                //    }
-                //    // Print TimeLine in console
-                //    if (y % yRound == 0) { Console.Write(':'); }
-                //}
+                for (Int32 y = numY - 1; y >= 0; y--)
+                {
+                    for (Int32 x = 0; x < numX; x++)
+                    {
+                        r = 0F; g = 0F; b = 0F;
+                        if (numSamples == 0)
+                        {
+                            // No AntiAliasing
+                            Single u = (Single)x / (Single)numX;
+                            Single v = (Single)y / (Single)numY;
+                            Ray ray = camera.GetSingleRay(u, v);
+                            color = Trace(ray, scene, 0);
+                            r = (Single)Math.Sqrt(color.R);
+                            g = (Single)Math.Sqrt(color.G);
+                            b = (Single)Math.Sqrt(color.B);
+                        }
+                        else
+                        {
+                            // AntiAliasing ON
+                            for (Int32 sample = 0; sample < numSamples; sample++)
+                            {
+                                Single u = (x + (Single)random.NextDouble()) / (Single)numX;
+                                Single v = (y + (Single)random.NextDouble()) / (Single)numY;
+                                Ray ray = camera.GetAARay(u, v);
+                                color = Trace(ray, scene, 0);
+                                r += color.R; g += color.G; b += color.B;
+                            }
+                            r = (Single)Math.Sqrt(r / (Single)numSamples);
+                            g = (Single)Math.Sqrt(g / (Single)numSamples);
+                            b = (Single)Math.Sqrt(b / (Single)numSamples);
+                        }
+                        imgBuff.SetPX(x, y, r, g, b);
+                    }
+                    // Print TimeLine in console
+                    if (y % yRound == 0) { Console.Write(':'); }
+                }
 
-                zBuff = new Int32[numX * numY];
-                for (Int32 i = 0; i < numX * numY; i++) { zBuff[i] = Int32.MinValue; }
-                Raster((HitList)scene, numX, numY);
+                //zBuff = new Int32[numX * numY];
+                //for (Int32 i = 0; i < numX * numY; i++) { zBuff[i] = Int32.MinValue; }
+                //Raster((HitList)scene, numX, numY);
 
                 imgBuff.FlipVertically();
                 writer.Write(imgBuff.GetBuff(), 0, imgBuff.GetBuff().Length);
